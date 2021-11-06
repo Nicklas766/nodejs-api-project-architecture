@@ -2,10 +2,25 @@ import express from 'express';
 import request from 'supertest';
 import bodyParser from 'body-parser';
 import artistRouter from './artistRoutes';
+import dbTestHelper from '../common/db/dbTestHelper';
 
 const app = express();
 app.use(bodyParser.json());
 app.use(artistRouter);
+
+afterAll(dbTestHelper.close);
+beforeAll(dbTestHelper.connect);
+afterEach(() => dbTestHelper.clearCollection('artists'));
+beforeEach(() => dbTestHelper.addToCollection('artists', [
+  {
+    id: 1,
+    name: 'Jason Mraz',
+  },
+  {
+    id: 2,
+    name: 'Veronica Maggio',
+  },
+]));
 
 describe('POST /artists/new', () => {
   it('should return 200', async () => {

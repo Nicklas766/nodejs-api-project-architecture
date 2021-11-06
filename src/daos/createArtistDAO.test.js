@@ -1,13 +1,21 @@
-import createArtistDAO from './createArtistDAO';
+import createArtistDAO, { artistModel } from './createArtistDAO';
+import dbTestHelper from '../common/db/dbTestHelper';
 
-const artists = new Map();
-const artist = createArtistDAO(artists);
+const artist = createArtistDAO(artistModel);
 
-afterEach(() => artists.clear());
-beforeEach(() => {
-  artists.set(1, { id: 1, name: 'Jason Mraz' });
-  artists.set(2, { id: 2, name: 'Veronica Maggio' });
-});
+afterAll(dbTestHelper.close);
+beforeAll(dbTestHelper.connect);
+afterEach(() => dbTestHelper.clearCollection('artists'));
+beforeEach(() => dbTestHelper.addToCollection('artists', [
+  {
+    id: 1,
+    name: 'Jason Mraz',
+  },
+  {
+    id: 2,
+    name: 'Veronica Maggio',
+  },
+]));
 
 describe('#getAll', () => {
   it('should return all artists', async () => {
@@ -55,9 +63,8 @@ describe('#create', () => {
       id: 3,
       name: 'John Mayer',
     });
-    const allArtists = await artist.getAll();
-
-    expect(allArtists).toMatchObject([
+    const fetchedArtists = await artist.getAll();
+    expect(fetchedArtists).toMatchObject([
       {
         id: 1,
         name: 'Jason Mraz',
