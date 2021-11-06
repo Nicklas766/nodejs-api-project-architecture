@@ -1,20 +1,31 @@
-import createArtistDAO from '../daos/createArtistDAO';
+import createArtistDAO, { Artist } from '../daos/createArtistDAO';
 import teamService from '../services/teamService';
 import createArtistService from '../services/createArtistService';
 import createArtistControllers from './createArtistControllers';
+import db from '../db';
 
-const artists = new Map();
 const artistControllers = createArtistControllers({
   artistService: createArtistService({
-    artistDAO: createArtistDAO(artists),
+    artistDAO: createArtistDAO(Artist),
     teamService,
   }),
 });
 
-afterEach(() => artists.clear());
-beforeEach(() => {
-  artists.set(1, { id: 1, name: 'Jason Mraz' });
-  artists.set(2, { id: 2, name: 'Veronica Maggio' });
+afterAll(async () => {
+  await db.close();
+});
+beforeEach(async () => {
+  await db.sync({ force: true });
+  await Artist.bulkCreate([
+    {
+      id: 1,
+      name: 'Jason Mraz',
+    },
+    {
+      id: 2,
+      name: 'Veronica Maggio',
+    },
+  ]);
 });
 
 describe('#getArtists', () => {

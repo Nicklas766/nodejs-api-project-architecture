@@ -1,8 +1,14 @@
 deploy: 
   api_key: 
     secure: { your encrypted key }
+env: 
+  global: 
+    - DB_NAME=db-name
+    - DB_USER=username
+    - DB_PASSWORD=password
+    - DB_HOST=db-test
+    - DB_PORT=5432
 script: 
-  - "docker-compose run server npm test"
-  - "docker-compose run server npm run build"
+  - "docker-compose run test npm test"
 services: 
   - docker

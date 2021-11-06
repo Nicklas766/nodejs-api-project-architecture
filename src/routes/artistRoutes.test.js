@@ -2,10 +2,29 @@ import express from 'express';
 import request from 'supertest';
 import bodyParser from 'body-parser';
 import artistRouter from './artistRoutes';
+import db from '../db';
+import { Artist } from '../daos/createArtistDAO';
 
 const app = express();
 app.use(bodyParser.json());
 app.use(artistRouter);
+
+afterAll(async () => {
+  await db.close();
+});
+beforeEach(async () => {
+  await db.sync({ force: true });
+  await Artist.bulkCreate([
+    {
+      id: 1,
+      name: 'Jason Mraz',
+    },
+    {
+      id: 2,
+      name: 'Veronica Maggio',
+    },
+  ]);
+});
 
 describe('POST /artists/new', () => {
   it('should return 200', async () => {

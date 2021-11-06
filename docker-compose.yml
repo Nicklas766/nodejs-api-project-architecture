@@ -12,5 +12,30 @@ services:
       - "exclude:/node/app/node_modules" # prevent host from overwriting node_modules
     command: "npm start"
 
+  test:
+    build: .
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+    volumes:
+      - "./:/node/app"
+      - "exclude:/node/app/node_modules"
+    depends_on:
+      - db-test
+
+  db-test:
+    image: postgres:latest
+    container_name: db-test
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports: 
+      - ${DB_PORT}:${DB_PORT}
+
 volumes:
   exclude:

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "eslint src/**/*.js & jest --passWithNoTests",
+    "test": "eslint src/**/*.js & jest --runInBand",
     "test:watch": "jest --watch",
     "build": "babel src -d dist --ignore src/**/*.test.js",
     "start": "npm run build && node dist/server.js"
@@ -14,7 +14,10 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

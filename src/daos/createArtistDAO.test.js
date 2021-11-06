@@ -1,28 +1,23 @@
-import createArtistDAO from './createArtistDAO';
+import createArtistDOA, { Artist } from './createArtistDAO';
+import db from '../db';
 
-const artists = new Map();
-const artist = createArtistDAO(artists);
+const artist = createArtistDOA(Artist);
 
-afterEach(() => artists.clear());
-beforeEach(() => {
-  artists.set(1, { id: 1, name: 'Jason Mraz' });
-  artists.set(2, { id: 2, name: 'Veronica Maggio' });
+afterAll(async () => {
+  await db.close();
 });
-
-describe('#getAll', () => {
-  it('should return all artists', async () => {
-    const fetchedArtists = await artist.getAll();
-    expect(fetchedArtists).toMatchObject([
-      {
-        id: 1,
-        name: 'Jason Mraz',
-      },
-      {
-        id: 2,
-        name: 'Veronica Maggio',
-      },
-    ]);
-  });
+beforeEach(async () => {
+  await db.sync({ force: true });
+  await Artist.bulkCreate([
+    {
+      id: 1,
+      name: 'Jason Mraz',
+    },
+    {
+      id: 2,
+      name: 'Veronica Maggio',
+    },
+  ]);
 });
 
 describe('#getById', () => {
