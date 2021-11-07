@@ -5,6 +5,7 @@ services:
     build: .
     environment:
       - PORT=${PORT}
+      - MONGO_URI=${MONGO_URI}
     ports:
       - "3000:3000"
     volumes:

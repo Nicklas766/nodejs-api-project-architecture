@@ -13,6 +13,7 @@ const artistControllers = createArtistControllers({
   }),
 });
 
+router.get('/artists', artistControllers.getArtists);
 router.post('/artists/new', validateArtistMiddleware, artistControllers.createArtist);
 
 export default router;
